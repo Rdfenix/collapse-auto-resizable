@@ -1,0 +1,18 @@
+<section class="collapse">
+  <header class="collapse-header" (click)="toggleElement()">
+    <span>Header of collapse</span>
+  </header>
+  <div class="collapse-body" #collapseSection>
+    <div #collapsecontent>
+      <ng-content select="[content]"></ng-content>
+    </div>
+    <div
+      *ngIf="!collapsecontent.children.length"
+      class="collapse-body-loading"
+      [ngClass]="{ 'collapse-body-loading-phasing': isOpned }"
+    >
+      <img src="assets/svg/loading.svg" alt="loading" />
+      <span class="collapse-body-loading-title">Loading</span>
+    </div>
+  </div>
+</section>
