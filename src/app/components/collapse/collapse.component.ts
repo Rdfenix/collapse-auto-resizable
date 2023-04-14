@@ -28,7 +28,8 @@ export class CollapseComponent implements OnInit, OnDestroy, AfterContentInit, A
   @ViewChild("collapsecontent") collapsecontent!: ElementRef<HTMLDivElement>;
 
   isOpned = false;
-  content = '';
+
+  private content = '';
   private scrollHeight!: Dict<number>;
 
   constructor() {
