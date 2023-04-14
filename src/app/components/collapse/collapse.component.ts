@@ -1,4 +1,15 @@
-import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren, Output, EventEmitter, ViewChild, AfterContentInit, AfterContentChecked, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  Output,
+  EventEmitter,
+  ViewChild,
+  AfterContentInit,
+  AfterContentChecked,
+  Input
+} from '@angular/core';
 
 interface Dict<T> {
   [key: string]: number
