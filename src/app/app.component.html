@@ -1,5 +1,5 @@
-<app-collapse>
-  <app-collapse content (whenOpen)="addNewDataOnArray()">
+<app-collapse [index]="0">
+  <app-collapse [index]="1" content (whenOpen)="addNewDataOnArray()">
     <div *ngIf="data.length > 0" content class="content">
       <span *ngFor="let item of data">{{ item }}</span>
     </div>

@@ -1,5 +1,8 @@
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren, Output, EventEmitter, ViewChild, AfterContentInit, AfterContentChecked, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 
+interface Dict<T> {
+  [key: string]: number
+}
 @Component({
   selector: 'app-collapse',
   templateUrl: './collapse.component.html',
@@ -7,24 +10,25 @@ import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren, Outp
 })
 export class CollapseComponent implements OnInit, OnDestroy, AfterContentInit, AfterContentChecked {
 
-  @Input() childClosed!: any;
+  @Input() index = 0;
+  @Output() whenOpen = new EventEmitter();
 
-  @Output() whenOpen = new EventEmitter()
-
-  @ViewChild('collapseSection') collapse!: ElementRef;
-  @ViewChild("collapsecontent") collapsecontent!: ElementRef;
+  @ViewChild('collapseSection') collapse!: ElementRef<HTMLDivElement>;
+  @ViewChild("collapsecontent") collapsecontent!: ElementRef<HTMLDivElement>;
 
   isOpned = false;
-  content = null;
-  private scrollHeight = 0;
+  content = '';
+  private scrollHeight!: Dict<number>;
 
-  constructor() { }
+  constructor() {
+    this.scrollHeight = {};
+  }
 
   ngOnInit(): void { }
 
   ngAfterContentInit(): void {
+    this.scrollHeight = { ...this.scrollHeight, [this.index]: 0 };
     this.content = this.collapsecontent?.nativeElement.innerHTML;
-    this.scrollHeight = 0;
   }
 
   ngAfterContentChecked(): void {
@@ -33,32 +37,28 @@ export class CollapseComponent implements OnInit, OnDestroy, AfterContentInit, A
     const childElement = this.collapsecontent?.nativeElement;
 
     if (componentContent !== this.content && this.isOpned) {
-      this.scrollHeight = this.scrollHeight - (element?.scrollHeight - childElement?.scrollHeight);
-      const sumScroll = this.scrollHeight + (element?.scrollHeight + childElement?.scrollHeight + 50);
-      this.scrollHeight = sumScroll;
-      element.style.maxHeight = `${this.scrollHeight}px`;
+      const sumScroll = this.scrollHeight[this.index] + (element?.scrollHeight + childElement?.scrollHeight + 150);
+      element.style.maxHeight = `${sumScroll}px`;
     }
   }
 
   toggleElement(): void {
     const element = this.collapse?.nativeElement;
     const childElement = this.collapsecontent?.nativeElement;
-    this.scrollHeight = 0;
-    const sumScroll = element.scrollHeight + childElement.scrollHeight + 10;
+    const sumScroll = element.scrollHeight + childElement.scrollHeight + 150;
 
     if (!this.isOpned) {
       this.isOpned = true;
-      this.scrollHeight = sumScroll;
+      this.scrollHeight = { ...this.scrollHeight, [this.index]: sumScroll };
       element.style.maxHeight = `${sumScroll}px`;
       this.whenOpen.emit();
     } else if (this.isOpned) {
       this.isOpned = false;
+      this.scrollHeight = { ...this.scrollHeight, [this.index]: 0 };
       element.style.maxHeight = '0px';
-      this.scrollHeight = this.scrollHeight - sumScroll;
     }
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void { }
 
 }
